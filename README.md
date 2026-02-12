@@ -1,2 +1,4 @@
 # KCI-Kernel-Cores-Interpettored
-KCI (Kernel Cores Interpreted) is a kernel built from scratch through an interpreter for OS bases, using ASM, C and Python. It generates and compiles a simple, functional system with full control over fs, init, drivers, interface, themes and more—no Linux base. Contribute and build it your way: simplicity, speed and performance first.
+A KCI is a kernel that goes through an interpreter for OS bases, with ASM and C, and for the Python interpreter that translates, generates, compiles, and delivers to you a world of simple and functional silicon with little thought and hard work, all from scratch like in the Stone Age, everything from zero, without a kernel for Linux or anything else. You can control fs, init, kernel, interface, images, drivers, colors, themes, programs, root, partitions, and everything you can imagine. Contribute and build; everything is in your hands... A phrase that defines the project: Simplicity, speed, and performance contribute to the glorious victory that one day will benefit you with everything you do.
+# Pros:
+Simple, fast and 100% Controls of OS and kernel
