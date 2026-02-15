@@ -3,52 +3,61 @@ import sys
 
 pasta = "."
 
-def interpretar(arquivo, fun_name, codigo_python, min_args=0):
+
+def func_print(args):
+    bootloader = f"""
+[ORG 0x7C00]
+; Código de exemplo para o bootloader
+MOV AX, 0x0000
+MOV DS, AX
+MOV ES, AX
+MOV SI, msg
+call print_string
+JMP $
+msg DB '{args}', 0"""
+
+def func_add(args):
+    if len(args) < 2:
+        print(f"Erro: 'add' precisa de pelo menos 2 argumentos.")
+        return
+    try:
+        resultado = int(args[0]) + int(args[1])
+        print("Resultado da soma:", resultado)
+    except ValueError:
+        print("Erro: argumentos devem ser números.")
+
+# Mapeamento de funções
+funcoes = {
+    "print": func_print,
+    "add": func_add
+}
+
+def interpretar(arquivo):
     with open(arquivo, "r") as f:
         for linha in f:
             linha = linha.strip()
             if not linha:
-                continue  # pula linhas vazias
-
+                continue
             partes = linha.split()
-            if partes[0] == fun_name:
-                args = partes[1:]
-
-                if len(args) < min_args:
-                    print(f"Erro: '{fun_name}' precisa de pelo menos {min_args} argumento(s).")
-                    print(f"Linha inválida: {linha}")
-                    continue
-
-                # executa código passado pelo main
-                exec(codigo_python, {}, {"args": args})
+            cmd = partes[0]
+            args = partes[1:]
+            if cmd in funcoes:
+                funcoes[cmd](args)
+            else:
+                print(f"Comando desconhecido: {cmd}")
 
 
 def main():
-    encountered = False
-
-    codigo_print = """
-print("Executando comando print")
-print("Argumentos:", args)
-"""
-
+    encontrados = False
     for arquivo in os.listdir(pasta):
         if arquivo.endswith(".kci"):
-            encountered = True
-            interpretar(arquivo, "print", codigo_print, min_args=1)
-            
-            codigo_add = """
-print("Executando comando add")
-try:
-    numeros = list(map(float, args))
-    resultado = sum(numeros)
-    print("Resultado da soma:", resultado)
-"""
-            interpretar(arquivo, "add", codigo_add, min_args=2)
+            encontrados = True
+            interpretar(arquivo)
 
-    if not encountered:
+    if not encontrados:
         print("Nenhum arquivo KCI encontrado na pasta atual.")
         sys.exit(1)
-
+        
 
 if __name__ == "__main__":
     main()
