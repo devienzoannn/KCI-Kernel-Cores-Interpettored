@@ -14,7 +14,18 @@ MOV ES, AX
 MOV SI, msg
 call print_string
 JMP $
-msg DB '{args}', 0"""
+msg DB '{args.join('')}', 0
+print_string:
+    MOV AL, [SI]
+    OR AL, AL
+    JZ .done
+    ; Aqui você pode adicionar código para imprimir o caractere em AL
+    ; Por exemplo, usando a porta de vídeo ou outra técnica de saída
+    INC SI
+    JMP print_string
+    .done:
+    RET
+"""
 
 def func_add(args):
     if len(args) < 2:

@@ -20,6 +20,9 @@ void kernel_main() {
     video[2] = 'K';
     video[3] = 0x07;
 
+    video[4] = ' ';
+    video[5] = 0x07;
+
     while (1) {
         // Loop infinito
     }
