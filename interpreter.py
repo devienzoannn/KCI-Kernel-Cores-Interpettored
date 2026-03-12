@@ -20,12 +20,11 @@ inside_function = False
 KERNEL_TEMPLATE_START = r"""
 #include <stdint.h>
 
-/* Multiboot header */
-__attribute__((section(".multiboot")))
+__attribute__((section(".multiboot"), used))
 const uint32_t multiboot_header[] = {
     0x1BADB002,
-    0x00,
-    -(0x1BADB002)
+    0x00000000,
+    0xE4524FFE
 };
 
 typedef unsigned short u16;
@@ -149,6 +148,7 @@ def build():
     subprocess.run([
         GCC, "-m32", "-ffreestanding",
         "-nostdlib", "-fno-pic",
+        "-O0",
         "-c", "kernel.c", "-o", "kernel.o"
     ], check=True)
 
@@ -171,9 +171,10 @@ SECTIONS
     print("Linkando kernel.elf...")
     subprocess.run([
         LD, "-m", "elf_i386",
-        "-T", "linker.ld",
-        "kernel.o",
-        "-o", "kernel.elf"
+"-T", "linker.ld",
+"-nostdlib",
+"kernel.o",
+"-o", "kernel.elf"
     ], check=True)
 
     # 4. Estrutura ISO
@@ -201,7 +202,8 @@ menuentry "MeuKernel" {
     subprocess.run([
         "grub-mkrescue",
         "-o", "kernel.iso",
-        ISO_DIR
+        ISO_DIR,
+        
     ], check=True)
 
     print("Build finalizado!")
